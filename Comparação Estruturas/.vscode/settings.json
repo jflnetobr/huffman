@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "time.h": "c",
+        "AVL-LEGAL.C": "cpp",
+        "bitset": "c",
+        "chrono": "c",
+        "algorithm": "c"
+    }
+}
