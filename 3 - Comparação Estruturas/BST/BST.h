@@ -1,3 +1,6 @@
+#ifndef BST_H
+#define BST_H
+
 typedef struct binary_search_tree binary_search_tree;
 
 struct binary_search_tree {
@@ -13,3 +16,5 @@ binary_search_tree* create_binary_search_tree(int item, binary_search_tree *left
 binary_search_tree* add(binary_search_tree *bt, int item); // add a number (node) in a binary tree
 binary_search_tree* search(binary_search_tree *bt, int item, int *count); // search a number in a binary search tree
 int is_empty(binary_search_tree *bt);  // check if the binary tree is empty
+
+#endif /* BST_H */

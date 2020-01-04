@@ -1,3 +1,6 @@
+#ifndef AVL_H
+#define AVL_H
+
 typedef struct binary_tree_avl binary_tree_avl;
 
 struct binary_tree_avl {
@@ -18,3 +21,5 @@ int height_avl(binary_tree_avl *bt); // returns the height of a node
 int balance_factor_avl(binary_tree_avl *bt); // returns the balance factor of a tree or subtree
 binary_tree_avl* rotate_left_avl(binary_tree_avl *bt); // left rotation function (AVL)
 binary_tree_avl* rotate_right_avl(binary_tree_avl *bt); // right rotation function (AVL)
+
+#endif /* AVL_H */
