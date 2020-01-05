@@ -23,12 +23,12 @@ int is_empty_queue(priority_queue *queue)
 /** @param queue: a pointer for a queue */
 /** @param item: the caractere that will be stored in the huffman node created */
 /** @param freq: the frequency that will be stored in the huffman node created */
-void enqueue_huffman_node(priority_queue *queue, unsigned char item, long long int freq)
+void enqueue_huffman_node(priority_queue *queue, unsigned char *item, long long int *freq)
 {
 
     huff_node *new_huff_node = create_huffman_node(item, freq, NULL, NULL);
 
-    if ((is_empty_queue(queue)) || (freq > queue->head->freq)) 
+    if ((is_empty_queue(queue)) || (*freq < * (int *) queue->head->freq)) 
     {
         new_huff_node->next = queue->head;
         queue->head = new_huff_node;
@@ -37,7 +37,7 @@ void enqueue_huffman_node(priority_queue *queue, unsigned char item, long long i
     {
         huff_node *current = queue->head;
 
-        while ((current->next != NULL) && (current->next->freq > freq)) {
+        while ((current->next != NULL) && (* (int *)current->next->freq < *freq)) {
             current = current->next;
         }
         new_huff_node->next = current->next;

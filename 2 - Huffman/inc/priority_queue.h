@@ -12,7 +12,7 @@ struct priority_queue{
 
 priority_queue *create_priority_queue(); // create a priority queue and return it
 int is_empty_queue(priority_queue *queue); // check if queue if empty
-void enqueue_huffman_node(priority_queue *queue, unsigned char item, long long int freq); // enqueue a huffman node in queue
+void enqueue_huffman_node(priority_queue *queue, unsigned char *item, long long int *freq); // enqueue a huffman node in queue
 huff_node *dequeue_huffman_node(priority_queue *queue); // dequeue a huffman node of queue and return it
 
 #endif /* PRIORITY_QUEUE_H */

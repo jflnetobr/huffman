@@ -10,11 +10,11 @@
 /** @param left: the left subtree of the huffman node being created */
 /** @param right: the right subtree of the huffman node being created */
 /** @return returns the requested new huffman node */
-huff_node *create_huffman_node(unsigned char item, long long int freq, huff_node *left, huff_node* right)
+huff_node *create_huffman_node(unsigned char *item, long long int *freq, huff_node *left, huff_node* right)
 {
     huff_node *new_huff_node = (huff_node*) malloc(sizeof(huff_node)); 
-    new_huff_node->item = item; 
-    new_huff_node->freq = freq; 
+    new_huff_node->item = (void *) item; 
+    new_huff_node->freq = (void *) freq; 
     new_huff_node->left = left;
     new_huff_node->right = right;
     return new_huff_node;    
