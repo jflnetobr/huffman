@@ -4,8 +4,8 @@
 #include <math.h>
 #include <time.h>
 
-#include "AVL/AVL.h"
-#include "BST/BST.h"
+#include "inc/AVL.h"
+#include "inc/BST.h"
 
 void header(){
     printf("|===============================|\n");
@@ -20,7 +20,7 @@ void main(){
     binary_search_tree *bst = create_empty_binary_search_tree();
             
     FILE *file;    
-    file = fopen("compare_and_plot.csv", "w");
+    file = fopen("compare_and_plot.txt", "w");
     
     srand(time(NULL));
 
