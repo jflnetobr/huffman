@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #ifndef HUFF_STRUCT_H
 #define HUFF_STRUCT_H
 
@@ -43,12 +47,22 @@ int is_leaf(huff_node* node);
 unsigned char get_item(huff_node* node);
 
 /** @param tree_root: the root of the tree that is desired to pre-order traversals */
-void print_pre_order(huff_node* tree_root);
+/** @param file: the file to write the tree */
+void print_pre_order(huff_node* tree_root, FILE *file);
 
 /** @param tree_node: the node that is desired to get the item and frequency of this item */
 /** @param table: an array representing a table that lists items in ASCII code and Huffman code */
 /** @param code: the code we want to store */
 void build_table(huff_node* tree_node, code table[], code code);
+
+/** @param tree_root: the root of the tree is desired get size */
+/** @param count: pointer for the size */
+void get_tree_size(huff_node *tree_root, int *count);
+
+/** @param table: the table with new code for every caracter */
+/** @param frequency: the frequency of each character from file */
+/** @return returns the trash size */
+int get_trash_size(code table[], int frequency[]);
 
 /* End HUFF Tree functions */
 

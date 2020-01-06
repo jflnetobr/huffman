@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "../inc/priority_queue.h"
 
 priority_queue *create_priority_queue()
