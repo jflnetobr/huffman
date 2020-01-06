@@ -3,9 +3,6 @@
 
 #include "../inc/priority_queue.h"
 
-/* Begin Priority Queue functions */
-
-/** @return returns a new priority queue */
 priority_queue *create_priority_queue()
 {
     priority_queue *new_queue = (priority_queue*) malloc(sizeof(priority_queue));
@@ -13,40 +10,30 @@ priority_queue *create_priority_queue()
     return new_queue;
 }
 
-/** @param queue: a pointer for a queue */
-/** @return returns 1 if is empty and 0 if not */
 int is_empty_queue(priority_queue *queue)
 {
     return (queue->head == NULL);
 }
 
-/** @param queue: a pointer for a queue */
-/** @param item: the caractere that will be stored in the huffman node created */
-/** @param freq: the frequency that will be stored in the huffman node created */
-void enqueue_huffman_node(priority_queue *queue, unsigned char *item, long long int *freq)
+void enqueue_huffman_node(priority_queue *queue, huff_node *node)
 {
-
-    huff_node *new_huff_node = create_huffman_node(item, freq, NULL, NULL);
-
-    if ((is_empty_queue(queue)) || (*freq < * (int *) queue->head->freq)) 
+    if ((is_empty_queue(queue)) || (node->freq <= queue->head->freq)) 
     {
-        new_huff_node->next = queue->head;
-        queue->head = new_huff_node;
+        node->next = queue->head;
+        queue->head = node;
     } 
     else 
     {
         huff_node *current = queue->head;
 
-        while ((current->next != NULL) && (* (int *)current->next->freq < *freq)) {
+        while ((current->next != NULL) && (current->next->freq < node->freq)) {
             current = current->next;
         }
-        new_huff_node->next = current->next;
-        current->next = new_huff_node;
+        node->next = current->next;
+        current->next = node;
     }
 }
 
-/** @param queue: a pointer for a queue */
-/** @return returns node dequeued */
 huff_node *dequeue_huffman_node(priority_queue *queue)
 {
     if (is_empty_queue(queue))
@@ -62,4 +49,14 @@ huff_node *dequeue_huffman_node(priority_queue *queue)
     }
 }
 
-/* End Priority Queue functions */
+int has_next(priority_queue *queue)
+{
+    if(queue->head == NULL)
+    {
+        return 0;
+    } 
+    else if(queue->head->next != NULL)
+    {
+        return 1;
+    }
+}
