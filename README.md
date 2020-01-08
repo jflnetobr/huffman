@@ -3,7 +3,7 @@
 
 * **_Professor:_ [_Márcio Ribeiro_](http://www.ic.ufal.br/marcio)**
 
-O projeto se divide em 4 módulos, sendo obrigatório o uso de **Git**.
+### O projeto se divide em 4 módulos, sendo obrigatório o uso de **Git**.
   1. Seminário de um algoritmo ou estrutura de dados não vista em sala. Escolha do grupo: **TRIE**;
   2. Implementação do _algoritmo de Huffman_;
   3. Contagem e plotagem de comparações de duas estruturas vistas no curso. Escolha do grupo: **Árvore desbalanceada vs AVL**;
