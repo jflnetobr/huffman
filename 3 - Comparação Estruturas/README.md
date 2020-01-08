@@ -20,3 +20,8 @@
     
 * Para a instalação das bibliotecas, digite o seguinte comando:
     * `$ pip install numpy matplotlib`
+    
+* Para rodar os testes, e em seguida plotar o resultado, digite os seguintes comandos:
+   * `$ chmod +x compare_plot.sh`
+   * `$ ./compare_plot.sh`
+ 
