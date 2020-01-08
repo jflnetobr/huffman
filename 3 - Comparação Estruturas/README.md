@@ -2,12 +2,10 @@
 * :punch:  BST vs AVL  :punch:
 
 ## Sites úteis:
-* [Matplolib](https://matplotlib.org/)
+* [Matplotlib](https://matplotlib.org/)
 * [NumPy](https://numpy.org/)
 
 ## Configurações para testes
-
-* Faça Download do [Github Desktop](https://desktop.github.com/). (Opcional)
 
 * Clone o [repositório](https://github.com/jflnetobr/huffman) para uma pasta local do seu computador.
 
