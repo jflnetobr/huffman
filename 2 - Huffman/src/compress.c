@@ -45,23 +45,128 @@ huff_node *create_treefromfile(char filePath[], int frequency[])
     return dequeue_huffman_node(queue);
 }
 
-unsigned char *create_header(int trashsize, int treesize)
-{
-  unsigned char *header = (unsigned char*) malloc(2 * sizeof(unsigned char));
-  header[0] = (trashsize << 5) | (treesize >> 8);
-  header[1] = treesize;
+void build_table(huff_node* tree_node, code table[], code code)
+{         
+    if(is_leaf(tree_node))
+    {
+        table[(int) get_item(tree_node)] = code;
+        return;
+    }
+    else
+    {
+        code.size++;
+        code.code <<= 1;
+        build_table(tree_node->left, table, code);
+        code.code++;
+        build_table(tree_node->right, table, code);
+    }        
+}
 
-  return header;
+int get_trash_size(code table[], int frequency[])
+{
+    int i;
+    long long int count = 0;
+
+    for(i = 0; i < 256; i++)
+    {
+        if(frequency[i] > 0)
+        {
+            count += table[i].size * frequency[i];
+        }
+    }
+
+    count = (8 - (count % 8));
+
+    return count;
+}
+
+void get_tree_size(huff_node *tree_root, int *count)
+{
+    *count = *count + 1;
+
+    if(is_leaf(tree_root)){
+        unsigned char c = get_item(tree_root);
+        if(c == '*' || c == '\\') *count = *count + 1;
+        return;
+    }
+
+    get_tree_size(tree_root->left, count);
+    get_tree_size(tree_root->right, count); 
+}
+
+unsigned char *create_header(int trashsize, int treesize)
+{    
+    unsigned char *header = (unsigned char*) malloc(2 * sizeof(unsigned char));
+    header[0] = (trashsize << 5) | (treesize >> 8);
+    header[1] = treesize;
+
+    return header;
 }
 
 void create_out_file(char fileInPath[], char fileOutPath[], unsigned char *header, code table[], huff_node *tree_root)
 {
+    short buffer_size = 0, caractere;
+    unsigned char buffer = 0; 
+
+    unsigned short int aux, code_tmp = 0;
+    
     FILE *fileIn, *fileOut;
     fileIn = fopen(fileInPath, "r");
     fileOut = fopen(fileOutPath, "w");
 
     fprintf(fileOut, "%c%c", header[0], header[1]);
-    print_pre_order(tree_root, fileOut);
+    print_pre_order(tree_root, fileOut);        
+
+    while((caractere = getc(fileIn)) != EOF)
+    {        
+        if((table[caractere].size + buffer_size) <= 8)
+        {
+            buffer <<= table[caractere].size;
+            buffer = buffer | table[caractere].code;
+            buffer_size += table[caractere].size;
+        }        
+        else 
+        {
+            aux = table[caractere].size;                         
+            buffer <<= (8 - buffer_size);
+            code_tmp = table[caractere].code >> (table[caractere].size - (8 - buffer_size));
+            aux -= (8 - buffer_size);            
+            buffer = buffer | code_tmp;
+            
+            fprintf(fileOut, "%c", buffer);
+            buffer = 0;
+                    
+            if((table[caractere].size - aux) > 8)
+            {                                    
+                code_tmp = table[caractere].code << 16 - (table[caractere].size - (8 - buffer_size));                    
+                buffer = code_tmp >> 8;
+                fprintf(fileOut, "%c", buffer);
+                buffer = 0;
+                aux -= 8;
+            }                                
+
+            buffer_size = aux;                
+
+            code_tmp = table[caractere].code << (16 - buffer_size);
+            code_tmp >>= (16 - buffer_size);
+            buffer = code_tmp;                       
+        }
+        
+        if(buffer_size == 8)
+        {            
+            fprintf(fileOut, "%c", buffer);
+            buffer = 0;
+            buffer_size = 0;
+        }
+    }    
+
+    if(buffer_size > 0 && buffer_size < 8)
+    {         
+        buffer <<= (header[0] >> 5);        
+        fprintf(fileOut, "%c", buffer); 
+        buffer = 0;
+        buffer_size = 0;
+    }
 
     fclose(fileIn);
     fclose(fileOut);
