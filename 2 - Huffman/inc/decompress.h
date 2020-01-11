@@ -8,7 +8,7 @@
 #ifndef DECOMPRESS_H
 #define DECOMPRESS_H
 
-/* Begin COMPRESS functions */
+/* Begin DECOMPRESS functions */
 
 /** @param c: the unsigned char that is desired to know if have the bit "i" set*/
 /** @param i: the bit that is desired to know if is set at c char */
@@ -31,6 +31,6 @@ void fill_file(FILE *fileIn, FILE *fileOut, huff_node *tree, short int trashsize
 /** @param fileOutPath: the file path to write the decompressed file */
 void decompress(char fileInPath[], char fileOutPath[]);
 
-/* End COMPRESS functions */
+/* End DECOMPRESS functions */
 
-#endif /* COMPRESS_H */
+#endif /* DECOMPRESS_H */
