@@ -7,13 +7,7 @@
 
 /* Begin HUFF Struct */
 
-typedef struct code code;
 typedef struct huff_node huff_node;
-
-struct code{
-    unsigned char code; // the binary code of an item
-    unsigned char size; // the size of the code
-};
 
 struct huff_node{
     void *item; // the data that will be stored at this node
@@ -38,6 +32,11 @@ huff_node *create_huffman_node(void *item, long long int freq); // create a node
 /** @return returns the requested tree of huffman nodes */
 huff_node *place_tree_node(huff_node* node, huff_node* left, huff_node* right);
 
+/** @param node: the node that will receive a subtree */
+/** @param subtree: the subtree that will be aggregated to the root */
+/** @param right: the side of the subtree: 0 if is an left subtree, 1 if is an right subtree */
+void set_subtree(huff_node* node, huff_node* subtree, int dir);
+
 /** @param node: the node that will be tested if is a leaf of the tree */
 /** @return returns 1 if the passed node is a leaf or 0 if isn't */
 int is_leaf(huff_node* node);
@@ -49,20 +48,6 @@ unsigned char get_item(huff_node* node);
 /** @param tree_root: the root of the tree that is desired to pre-order traversals */
 /** @param file: the file to write the tree */
 void print_pre_order(huff_node* tree_root, FILE *file);
-
-/** @param tree_node: the node that is desired to get the item and frequency of this item */
-/** @param table: an array representing a table that lists items in ASCII code and Huffman code */
-/** @param code: the code we want to store */
-void build_table(huff_node* tree_node, code table[], code code);
-
-/** @param tree_root: the root of the tree is desired get size */
-/** @param count: pointer for the size */
-void get_tree_size(huff_node *tree_root, int *count);
-
-/** @param table: the table with new code for every caracter */
-/** @param frequency: the frequency of each character from file */
-/** @return returns the trash size */
-int get_trash_size(code table[], int frequency[]);
 
 /* End HUFF Tree functions */
 
