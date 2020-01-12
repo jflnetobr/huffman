@@ -14,6 +14,10 @@
 /** @param i: the bit that is desired to know if is set at c char */
 int is_bit_i_set(unsigned char c, int i);
 
+/** @param filePath: the path of the file that is desired to know the size */
+/** @return returns file size in bytes */
+long long int get_filesize(char filePath[]);
+
 /** @param fileIn: a pointer to the .huff file to decompress  */
 /** @param treesize: the current tree size */
 /** @return returns the root of the new huffman tree created */

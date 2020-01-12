@@ -56,8 +56,10 @@ void build_table(huff_node* tree_node, code table[], code code)
     {
         code.size++;
         code.code <<= 1;
+        if(tree_node->left != NULL)
         build_table(tree_node->left, table, code);
         code.code++;
+        if(tree_node->right != NULL)
         build_table(tree_node->right, table, code);
     }        
 }
@@ -82,16 +84,17 @@ int get_trash_size(code table[], int frequency[])
 
 void get_tree_size(huff_node *tree_root, int *count)
 {
-    *count = *count + 1;
+    if(tree_root != NULL)
+    {
+        if(is_leaf(tree_root) && (get_item(tree_root) == '*' || get_item(tree_root) == '\\'))
+        {
+            *count = *count + 1;    
+        }
 
-    if(is_leaf(tree_root)){
-        unsigned char c = get_item(tree_root);
-        if(c == '*' || c == '\\') *count = *count + 1;
-        return;
+        *count = *count + 1;
+        get_tree_size(tree_root->left, count);
+        get_tree_size(tree_root->right, count);
     }
-
-    get_tree_size(tree_root->left, count);
-    get_tree_size(tree_root->right, count); 
 }
 
 unsigned char *create_header(int trashsize, int treesize)
@@ -178,6 +181,15 @@ void compress(char fileInPath[], char fileOutPath[])
     memset(frequency, 0, 256 * sizeof(int));
 
     huff_node *root = create_treefromfile(fileInPath, frequency);
+
+    if(is_leaf(root)){
+        unsigned char *ast = (unsigned char*) malloc(sizeof(unsigned char));
+        *ast = '*';
+
+        huff_node *new_root = create_huffman_node((void *) ast, root->freq);
+        
+        root = place_tree_node(new_root, root, NULL);   
+    }
 
     code table[256], startcode;
     startcode.code = startcode.size = 0;

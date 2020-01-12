@@ -7,6 +7,69 @@
 #include "../inc/compress.h"
 #include "../inc/decompress.h"
 
+char *convert_size(long long int size)
+{
+    char *size_type;
+    float size_float = (float) size;    
+    
+    if (size >= 1000000000)
+    {
+        size_float /= 1000000000;
+        sprintf (size_type, "%.2f", size_float);     
+        strcat(size_type, " GB");
+        return  size_type;
+    }
+    else if (size >= 1000000)
+    {
+        size_float /= 1000000;
+        sprintf (size_type, "%.2f", size_float);     
+        strcat(size_type," MB");
+        return  size_type;
+    }
+    else if(size >= 1000)
+    {
+        size_float /= 1000;
+        sprintf (size_type, "%.2f", size_float);     
+        strcat(size_type," KB");
+        return  size_type;
+    }    
+    else
+    {        
+        sprintf (size_type, "%.0f", size_float);     
+        strcat(size_type," Bytes");
+        return  size_type;
+    }
+}
+
+void print_file_sizes(char fileIn[], char fileOut[])
+{
+    long long int initial_size = get_filesize(fileIn);
+    long long int end_size = get_filesize(fileOut);
+
+    char *initial_size_string = convert_size(initial_size); 
+
+    printf(" - Tamanho do arquivo original: %s\n", initial_size_string);
+
+    char *end_size_string = convert_size(end_size);
+
+    printf(" - Tamanho do arquivo comprimido: %s\n", end_size_string);                                    
+
+    printf("---------------------------------------------\n");
+                                            
+    float percent = (float) end_size/initial_size;
+    percent -= 1;
+    if(initial_size >= end_size)
+    {
+        percent *= -100;
+        printf(" - Arquivo compactado %.2f%% MENOR que o original\n",percent);
+    }
+    else
+    {
+        percent *= 100;
+        printf("Arquivo compactado %.2f%% MAIOR que o original\n",percent);  
+    }  
+}
+
 void remove_substring(char *string, char *sub) 
 {
     char *match = string;
@@ -19,18 +82,15 @@ void remove_substring(char *string, char *sub)
     }
 }
 
-void clear_screen()
+void print_message(char *message)
 {
     #ifdef WINDOWS
     system("cls");
     #else
     system("clear");
     #endif
-}
-
-void help()
-{
-    printf("Comandos:\n-c <caminho do arquivo> para comprimir\n-d <caminho do arquivo> para descomprimir\n-o <caminho do arquivo> após o -c ou -d, para escolher o local onde vai ser salvo o arquivo\n-h para informações\n");
+    printf("%s\n", message);
+    printf("Comandos:\n-c <caminho do arquivo> para comprimir\n-d <caminho do arquivo> para descomprimir\n-o <caminho do arquivo> após o -c ou -d, para escolher o local onde vai ser salvo o arquivo\n-h para informações\n");    
 }
 
 void main(int argc, char **argv)
@@ -52,26 +112,21 @@ void main(int argc, char **argv)
                                 if(argv[4])
                                 {
                                     compress(argv[2], argv[4]);
+                                    print_file_sizes(argv[2], argv[4]);
                                 } 
                                 else 
                                 {
-                                    clear_screen();
-                                    printf("O Caminho de saída do arquivo não foi informado!\n");
-                                    help();
+                                    print_message("O Caminho de saída do arquivo não foi informado!\n");                                    
                                 }
                             } 
                             else 
                             {
-                                clear_screen();
-                                printf("Entrada inválida!\n");
-                                help();
+                                print_message("Entrada inválida!\n");
                             }
                         } 
                         else 
                         {
-                            clear_screen();
-                            printf("Entrada inválida!\n");
-                            help();
+                            print_message("Entrada inválida!\n");
                         }
                     } 
                     else 
@@ -81,13 +136,12 @@ void main(int argc, char **argv)
                         strcpy(substring,  ".huff");   
                         strcat(string, substring);
                         compress(argv[2], string);
+                        print_file_sizes(argv[2], string);
                     }
                 } 
                 else 
                 {
-                    clear_screen();
-                    printf("O Caminho do arquivo não foi informado!\n");
-                    help();
+                    print_message("O Caminho do arquivo não foi informado!\n");
                 }
             } 
             else if(argv[1][1] == 'd')
@@ -106,23 +160,17 @@ void main(int argc, char **argv)
                                 } 
                                 else 
                                 {
-                                    clear_screen();
-                                    printf("O Caminho de saída do arquivo não foi informado!\n");
-                                    help();
+                                    print_message("O Caminho do arquivo não foi informado!\n");
                                 }
                             } 
                             else 
                             {
-                                clear_screen();
-                                printf("Entrada inválida!\n");
-                                help();
+                                print_message("Entrada inválida!\n");
                             }
                         } 
                         else 
                         {
-                            clear_screen();
-                            printf("Entrada inválida!\n");
-                            help();
+                            print_message("Entrada inválida!\n");
                         }
                     }
                     else 
@@ -135,35 +183,26 @@ void main(int argc, char **argv)
                 } 
                 else 
                 {
-                    clear_screen();
-                    printf("O Caminho do arquivo não foi informado!\n");
-                    help();
+                    print_message("O Caminho do arquivo não foi informado!\n");
                 }
             } 
             else if(argv[1][1] == 'h')
             {
-                clear_screen();
-                help();
+                print_message("Ajuda:\n");
             } 
             else 
             {
-                clear_screen();
-                printf("Entrada inválida!\n");
-                help();
+                print_message("Entrada inválida!\n");
             }
         } 
         else 
         {
-            clear_screen();
-            printf("Entrada inválida!\n");
-            help();
+            print_message("Entrada inválida!\n");
         }
     }
     else
     {
-        clear_screen();
-        printf("Sem argumentos!\n");
-        help();
+        print_message("Sem argumentos!\n");        
     }
 
     return;

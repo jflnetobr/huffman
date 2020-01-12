@@ -6,6 +6,15 @@ int is_bit_i_set(unsigned char c, int i)
     return mask & c;
 }
 
+long long int get_filesize(char filePath[])
+{
+    FILE *file;
+    file = fopen(filePath, "r");
+
+    fseek(file, 0, SEEK_END);
+    return ftell(file);              
+}
+
 huff_node *mount_tree(FILE *fileIn, short int *treesize)
 {
     if(*treesize > 0)
@@ -95,10 +104,8 @@ void decompress(char fileInPath[], char fileOutPath[])
     fileOut = fopen(fileOutPath, "w");
 
     huff_node *tree;
-
-    fseek(fileIn, 0, SEEK_END);
-    long long int file_size = ftell(fileIn);  
-    rewind(fileIn);
+    
+    long long int file_size = get_filesize(fileInPath);      
 
     short int trashsize = 0, treesize = 0;
     unsigned char buffer = getc(fileIn);
