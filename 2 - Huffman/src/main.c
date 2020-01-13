@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+
+#define ANSI_COLOR_GREEN "\033[0;32m"
+#define ANSI_COLOR_RED "\033[1;31m"
+#define ANSI_COLOR_RESET "\033[0;0m"
+#define ANSI_COLOR_BOLD "\033[;1m"
 
 #include "../inc/huff_tree.h"
 #include "../inc/priority_queue.h"
@@ -46,27 +52,35 @@ void print_file_sizes(char fileIn[], char fileOut[])
     long long int initial_size = get_filesize(fileIn);
     long long int end_size = get_filesize(fileOut);
 
-    char *initial_size_string = convert_size(initial_size); 
+    char *initial_size_string = convert_size(initial_size);
 
-    printf(" - Tamanho do arquivo original: %s\n", initial_size_string);
+    printf(ANSI_COLOR_GREEN " - Arquivo comprimido com sucesso \n" ANSI_COLOR_RESET); 
+
+    printf(" - Tamanho do arquivo original: ");
+    printf(ANSI_COLOR_BOLD"%s\n"ANSI_COLOR_RESET, initial_size_string);
 
     char *end_size_string = convert_size(end_size);
 
-    printf(" - Tamanho do arquivo comprimido: %s\n", end_size_string);                                    
+    printf(" - Tamanho do arquivo comprimido: ");
+    printf(ANSI_COLOR_BOLD"%s\n"ANSI_COLOR_RESET, end_size_string);                                    
 
-    printf("---------------------------------------------\n");
+    printf("-------------------------------------------------\n");
                                             
     float percent = (float) end_size/initial_size;
     percent -= 1;
     if(initial_size >= end_size)
     {
         percent *= -100;
-        printf(" - Arquivo compactado %.2f%% MENOR que o original\n",percent);
+        printf(" - Arquivo compactado ");
+        printf(ANSI_COLOR_BOLD"%.2f%% MENOR "ANSI_COLOR_RESET,percent);   
+        printf("que o original\n");
     }
     else
     {
         percent *= 100;
-        printf("Arquivo compactado %.2f%% MAIOR que o original\n",percent);  
+        printf(" - Arquivo compactado ");
+        printf(ANSI_COLOR_BOLD"%.2f%% MAIOR "ANSI_COLOR_RESET,percent);   
+        printf("que o original\n");
     }  
 }
 
@@ -89,12 +103,12 @@ void print_message(char *message)
     #else
     system("clear");
     #endif
-    printf("%s\n", message);
-    printf("Comandos:\n-c <caminho do arquivo> para comprimir\n-d <caminho do arquivo> para descomprimir\n-o <caminho do arquivo> após o -c ou -d, para escolher o local onde vai ser salvo o arquivo\n-h para informações\n");    
+    printf(ANSI_COLOR_RED"%s\n"ANSI_COLOR_RESET, message);
+    printf(ANSI_COLOR_BOLD"Comandos:\n-c <caminho do arquivo> para comprimir\n-d <caminho do arquivo> para descomprimir\n-o <caminho do arquivo> após o -c ou -d, para escolher o local onde vai ser salvo o arquivo\n-h para informações\n"ANSI_COLOR_RESET);    
 }
 
 void main(int argc, char **argv)
-{  
+{ 
     if( argc >= 2 )
     {
         if(argv[1][0] == '-')
@@ -111,8 +125,15 @@ void main(int argc, char **argv)
                             {
                                 if(argv[4])
                                 {
+                                    clock_t start, end;
+                                    double cpu_time_used;
+                                    start = clock();
                                     compress(argv[2], argv[4]);
                                     print_file_sizes(argv[2], argv[4]);
+                                    end = clock();
+                                    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+                                    printf(" - Tempo gasto na compressão do arquivo: ");
+                                    printf(ANSI_COLOR_BOLD"%.2lf segundos \n"ANSI_COLOR_RESET,cpu_time_used);
                                 } 
                                 else 
                                 {
@@ -131,12 +152,19 @@ void main(int argc, char **argv)
                     } 
                     else 
                     {
+                        clock_t start, end;
+                        double cpu_time_used;
+                        start = clock();
                         char string[250], substring[10];
                         strcpy(string,  argv[2]);  
                         strcpy(substring,  ".huff");   
                         strcat(string, substring);
                         compress(argv[2], string);
                         print_file_sizes(argv[2], string);
+                        end = clock();
+                        cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+                        printf(" - Tempo gasto na compressão do arquivo: ");
+                        printf(ANSI_COLOR_BOLD"%.2lf segundos \n"ANSI_COLOR_RESET,cpu_time_used);
                     }
                 } 
                 else 
@@ -156,7 +184,15 @@ void main(int argc, char **argv)
                             {
                                 if(argv[4])
                                 {
+                                    clock_t start, end;
+                                    double cpu_time_used;
+                                    start = clock();
                                     decompress(argv[2], argv[4]);
+                                    printf(ANSI_COLOR_GREEN" - Arquivo descomprimido com sucesso\n" ANSI_COLOR_RESET);
+                                    end = clock();
+                                    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+                                    printf(" - Tempo gasto na descompressão do arquivo: ");
+                                    printf(ANSI_COLOR_BOLD"%.2lf segundos \n"ANSI_COLOR_RESET,cpu_time_used);
                                 } 
                                 else 
                                 {
@@ -175,10 +211,18 @@ void main(int argc, char **argv)
                     }
                     else 
                     {
+                        clock_t start, end;
+                        double cpu_time_used;
+                        start = clock();
                         char *string;
                         strcpy(string, argv[2]);
                         remove_substring(string, ".huff");
                         decompress(argv[2], string);
+                        printf(ANSI_COLOR_GREEN " - Arquivo descomprimido com sucesso\n" ANSI_COLOR_RESET);
+                        end = clock();
+                        cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+                        printf(" - Tempo gasto na descompressão do arquivo: ");
+                        printf(ANSI_COLOR_BOLD"%.2lf segundos \n"ANSI_COLOR_RESET,cpu_time_used);
                     }
                 } 
                 else 
@@ -204,6 +248,5 @@ void main(int argc, char **argv)
     {
         print_message("Sem argumentos!\n");        
     }
-
     return;
 }
