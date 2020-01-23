@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #define ANSI_COLOR_GREEN "\033[0;32m"
 #define ANSI_COLOR_RED "\033[1;31m"
@@ -55,8 +54,12 @@ void print_file_sizes(char fileIn[], char fileOut[])
     char *initial_size_string = convert_size(initial_size);
 
     printf(ANSI_COLOR_GREEN " - Arquivo comprimido com sucesso \n" ANSI_COLOR_RESET); 
-
-    printf(" - Tamanho do arquivo original: ");
+    printf(" - Arquivo ");
+    printf(ANSI_COLOR_BOLD"%s "ANSI_COLOR_RESET, fileIn);
+    printf("comprimido para ");
+    printf(ANSI_COLOR_BOLD"%s \n"ANSI_COLOR_RESET, fileOut);    
+    
+    printf("-------------------------------------------------\n - Tamanho do arquivo original: ");
     printf(ANSI_COLOR_BOLD"%s\n"ANSI_COLOR_RESET, initial_size_string);
 
     char *end_size_string = convert_size(end_size);
@@ -107,6 +110,16 @@ void print_message(char *message)
     printf(ANSI_COLOR_BOLD"Comandos:\n-c <caminho do arquivo> para comprimir\n-d <caminho do arquivo> para descomprimir\n-o <caminho do arquivo> após o -c ou -d, para escolher o local onde vai ser salvo o arquivo\n-h para informações\n"ANSI_COLOR_RESET);    
 }
 
+int file_exists(char filePath[])
+{
+    FILE *file;
+    if (file = fopen(filePath, "r")){
+        fclose(file);
+        return 1;
+    }
+    return 0;
+}
+
 void main(int argc, char **argv)
 { 
     if( argc >= 2 )
@@ -124,16 +137,23 @@ void main(int argc, char **argv)
                             if(argv[3][1] == 'o')
                             {
                                 if(argv[4])
-                                {
-                                    clock_t start, end;
-                                    double cpu_time_used;
-                                    start = clock();
-                                    compress(argv[2], argv[4]);
-                                    print_file_sizes(argv[2], argv[4]);
-                                    end = clock();
-                                    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-                                    printf(" - Tempo gasto na compressão do arquivo: ");
-                                    printf(ANSI_COLOR_BOLD"%.2lf segundos \n"ANSI_COLOR_RESET,cpu_time_used);
+                                {                                    
+                                    if(file_exists(argv[2]))
+                                    {
+                                        if(file_exists(argv[4]))
+                                        {
+                                            print_message("O arquivo de saída já existe, tente alterar o nome do mesmo!\n");    
+                                        }
+                                        else
+                                        {
+                                            compress(argv[2], argv[4]);
+                                            print_file_sizes(argv[2], argv[4]);
+                                        }                                                            
+                                    }
+                                    else
+                                    {
+                                        print_message("O arquivo de entrada não foi encontrado!\n");
+                                    }                                    
                                 } 
                                 else 
                                 {
@@ -152,19 +172,26 @@ void main(int argc, char **argv)
                     } 
                     else 
                     {
-                        clock_t start, end;
-                        double cpu_time_used;
-                        start = clock();
                         char string[250], substring[10];
                         strcpy(string,  argv[2]);  
                         strcpy(substring,  ".huff");   
                         strcat(string, substring);
-                        compress(argv[2], string);
-                        print_file_sizes(argv[2], string);
-                        end = clock();
-                        cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-                        printf(" - Tempo gasto na compressão do arquivo: ");
-                        printf(ANSI_COLOR_BOLD"%.2lf segundos \n"ANSI_COLOR_RESET,cpu_time_used);
+                        if(file_exists(argv[2]))
+                        {
+                            if(file_exists(string))
+                            {
+                                print_message("O arquivo de saída default já existe, tente informar um nome diferente com -o!\n");    
+                            }
+                            else
+                            {
+                                compress(argv[2], string);
+                                print_file_sizes(argv[2], string);
+                            }
+                        }
+                        else
+                        {
+                            print_message("O arquivo de entrada não foi encontrado!\n");
+                        }                          
                     }
                 } 
                 else 
@@ -183,16 +210,28 @@ void main(int argc, char **argv)
                             if(argv[3][1] == 'o')
                             {
                                 if(argv[4])
-                                {
-                                    clock_t start, end;
-                                    double cpu_time_used;
-                                    start = clock();
-                                    decompress(argv[2], argv[4]);
-                                    printf(ANSI_COLOR_GREEN" - Arquivo descomprimido com sucesso\n" ANSI_COLOR_RESET);
-                                    end = clock();
-                                    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-                                    printf(" - Tempo gasto na descompressão do arquivo: ");
-                                    printf(ANSI_COLOR_BOLD"%.2lf segundos \n"ANSI_COLOR_RESET,cpu_time_used);
+                                {                                    
+                                    if(file_exists(argv[2]))
+                                    {
+                                        if(file_exists(argv[4]))
+                                        {
+                                            print_message("O arquivo de saída já existe, tente alterar o nome do mesmo!\n");    
+                                        }
+                                        else
+                                        {                                                                                                                                
+                                            decompress(argv[2], argv[4]);
+
+                                            printf(ANSI_COLOR_GREEN" - Arquivo descomprimido com sucesso\n" ANSI_COLOR_RESET);   
+                                            printf(" - Arquivo ");
+                                            printf(ANSI_COLOR_BOLD"%s "ANSI_COLOR_RESET, argv[2]);
+                                            printf("descomprimido para ");
+                                            printf(ANSI_COLOR_BOLD"%s \n"ANSI_COLOR_RESET, argv[4]);  
+                                        }  
+                                    }
+                                    else
+                                    {
+                                        print_message("O arquivo de entrada não foi encontrado!\n");
+                                    }                             
                                 } 
                                 else 
                                 {
@@ -211,18 +250,30 @@ void main(int argc, char **argv)
                     }
                     else 
                     {
-                        clock_t start, end;
-                        double cpu_time_used;
-                        start = clock();
                         char *string;
                         strcpy(string, argv[2]);
                         remove_substring(string, ".huff");
-                        decompress(argv[2], string);
-                        printf(ANSI_COLOR_GREEN " - Arquivo descomprimido com sucesso\n" ANSI_COLOR_RESET);
-                        end = clock();
-                        cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-                        printf(" - Tempo gasto na descompressão do arquivo: ");
-                        printf(ANSI_COLOR_BOLD"%.2lf segundos \n"ANSI_COLOR_RESET,cpu_time_used);
+                        if(file_exists(argv[2]))
+                        {
+                            if(file_exists(string))
+                            {
+                                print_message("O arquivo de saída default já existe, tente informar um nome diferente com -o!\n");    
+                            }
+                            else
+                            {                                                                                                                                
+                                decompress(argv[2], argv[4]);
+
+                                printf(ANSI_COLOR_GREEN" - Arquivo descomprimido com sucesso\n" ANSI_COLOR_RESET);   
+                                printf(" - Arquivo ");
+                                printf(ANSI_COLOR_BOLD"%s "ANSI_COLOR_RESET, argv[2]);
+                                printf("descomprimido para ");
+                                printf(ANSI_COLOR_BOLD"%s \n"ANSI_COLOR_RESET, argv[4]);  
+                            }  
+                        }
+                        else
+                        {
+                            print_message("O arquivo de entrada não foi encontrado!\n");
+                        } 
                     }
                 } 
                 else 

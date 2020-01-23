@@ -138,16 +138,6 @@ void create_out_file(char fileInPath[], char fileOutPath[], unsigned char *heade
             
             fprintf(fileOut, "%c", buffer);
             buffer = 0;
-                    
-            if((table[caractere].size - aux) > 8)
-            {                                    
-                code_tmp = table[caractere].code << 16 - (table[caractere].size - (8 - buffer_size));                    
-                buffer = code_tmp >> 8;
-                fprintf(fileOut, "%c", buffer);
-                buffer = 0;
-                aux -= 8;
-            }                                
-
             buffer_size = aux;                
 
             code_tmp = table[caractere].code << (16 - buffer_size);
