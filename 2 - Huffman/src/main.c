@@ -261,13 +261,13 @@ void main(int argc, char **argv)
                             }
                             else
                             {                                                                                                                                
-                                decompress(argv[2], argv[4]);
+                                decompress(argv[2], string);
 
                                 printf(ANSI_COLOR_GREEN" - Arquivo descomprimido com sucesso\n" ANSI_COLOR_RESET);   
                                 printf(" - Arquivo ");
                                 printf(ANSI_COLOR_BOLD"%s "ANSI_COLOR_RESET, argv[2]);
                                 printf("descomprimido para ");
-                                printf(ANSI_COLOR_BOLD"%s \n"ANSI_COLOR_RESET, argv[4]);  
+                                printf(ANSI_COLOR_BOLD"%s \n"ANSI_COLOR_RESET, string);  
                             }  
                         }
                         else
