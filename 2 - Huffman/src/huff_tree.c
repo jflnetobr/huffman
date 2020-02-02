@@ -14,24 +14,10 @@ huff_node *create_huffman_node(void *item, long long int freq)
     return new_huff_node;
 }
 
-huff_node *place_tree_node(huff_node* node, huff_node* left, huff_node* right)
+void place_tree_node(huff_node* node, huff_node* left, huff_node* right)
 {    
     node->right = right;
-    node->left = left;
-
-    return node;
-}
-
-void set_subtree(huff_node* node, huff_node* subtree, int dir)
-{        
-    if(dir)
-    {
-        node->right = subtree;
-    }
-    else
-    {
-        node->left = subtree;
-    }
+    node->left = left;    
 }
 
 int is_leaf(huff_node* node)
@@ -44,6 +30,14 @@ unsigned char get_item(huff_node* node)
     unsigned char *item = (unsigned char*) node->item;
 
     return *item;
+}
+
+void *set_void_pointer(unsigned char item)
+{
+    unsigned char *pointer = (unsigned char*) malloc(sizeof(unsigned char));
+    *pointer = item;    
+
+    return (void*) pointer;
 }
 
 void print_pre_order(huff_node* tree_root, FILE *file)

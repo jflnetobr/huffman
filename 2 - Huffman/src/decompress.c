@@ -29,18 +29,14 @@ huff_node *mount_tree(FILE *fileIn, short int *treesize)
             caractere = getc(fileIn);
             *treesize = *treesize - 1;
             flag = 1;            
-        }          
+        }                      
         
-        unsigned char *aux = (unsigned char*) malloc(sizeof(unsigned char));
-        *aux = caractere;
-        void *pointer_void = (void *) aux;
-        
-        huff_node *root = create_huffman_node(pointer_void, 0);
+        huff_node *root = create_huffman_node(set_void_pointer(caractere), 0);
 
         if(caractere == '*' && !flag)
         {                             
-            set_subtree(root, mount_tree(fileIn, treesize), 0);                     
-            set_subtree(root, mount_tree(fileIn, treesize), 1);
+            place_tree_node(root, mount_tree(fileIn, treesize), root->right);                     
+            place_tree_node(root, root->left,mount_tree(fileIn, treesize));
         }
         
         return root;

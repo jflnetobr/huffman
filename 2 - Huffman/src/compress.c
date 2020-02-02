@@ -18,24 +18,21 @@ huff_node *create_treefromfile(char filePath[], int frequency[])
     for(i = 0; i < 256; i++)
     { 
         if(frequency[i] > 0) 
-        {            
-            unsigned char *item = (unsigned char*) malloc(sizeof(unsigned char));
-            *item = i;
-            enqueue_huffman_node(queue, create_huffman_node((void*) item, frequency[i]));
+        {                        
+            enqueue_huffman_node(queue, create_huffman_node(set_void_pointer(i), frequency[i]));            
         }
     }   
 
-    unsigned char *ast = (unsigned char*) malloc(sizeof(unsigned char));
-    *ast = '*';
+    void *ast = set_void_pointer('*');
 
     while(has_next(queue))
     {
         node_left = dequeue_huffman_node(queue);
         node_right = dequeue_huffman_node(queue);
 
-        root = create_huffman_node((void *) ast, node_left->freq + node_right->freq);
+        root = create_huffman_node(ast, node_left->freq + node_right->freq);
         
-        root = place_tree_node(root, node_left, node_right);        
+        place_tree_node(root, node_left, node_right);        
 
         enqueue_huffman_node(queue, root);
     }
@@ -173,12 +170,11 @@ void compress(char fileInPath[], char fileOutPath[])
     huff_node *root = create_treefromfile(fileInPath, frequency);
 
     if(is_leaf(root)){
-        unsigned char *ast = (unsigned char*) malloc(sizeof(unsigned char));
-        *ast = '*';
-
-        huff_node *new_root = create_huffman_node((void *) ast, root->freq);
+        void *ast = set_void_pointer('*');
         
-        root = place_tree_node(new_root, root, NULL);   
+        huff_node *new_root = create_huffman_node(ast, root->freq);
+        
+        place_tree_node(new_root, root, NULL);   
     }
 
     code table[256], startcode;
