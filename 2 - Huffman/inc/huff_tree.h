@@ -29,13 +29,7 @@ huff_node *create_huffman_node(void *item, long long int freq); // creates a huf
 /** @param node: the node that will be the root of the tree to be created */
 /** @param left: the left subtree of the tree to be created */
 /** @param right: the right subtree of the tree to be created */
-/** @return returns the requested tree of huffman nodes */
-huff_node *place_tree_node(huff_node* node, huff_node* left, huff_node* right); // sets the left and right subtrees of an huffman node (root of the tree)
-
-/** @param node: the node that will receive a subtree */
-/** @param subtree: the subtree that will be aggregated to the root */
-/** @param right: the side of the subtree: 0 if is an left subtree, 1 if is an right subtree */
-void set_subtree(huff_node* node, huff_node* subtree, int dir); // sets the left or right subtree of the given root (left or right defined by param 'dir')
+void place_tree_node(huff_node* node, huff_node* left, huff_node* right); // sets the left and right subtrees in an huffman node
 
 /** @param node: the node that will be tested if is a leaf of the tree */
 /** @return returns 1 if the passed node is a leaf or 0 if isn't */
@@ -44,6 +38,10 @@ int is_leaf(huff_node* node); // checks if a given huffman node is a leaf in the
 /** @param node: the node that is desired to know the stored item */
 /** @return returns the item stored at the node or NULL if the node is NULL */
 unsigned char get_item(huff_node* node); // returns the character that corresponds to the *void stored in the huffman node
+
+/** @param item: the item that is desired to make a void pointer to */
+/** @return returns an void pointer to the item */
+void *set_void_pointer(unsigned char item); // returns an void pointer to an unsigned char
 
 /** @param tree_root: the root of the tree that is desired to pre-order traversals */
 /** @param file: the file to write the tree */
