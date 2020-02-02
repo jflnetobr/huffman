@@ -4,8 +4,8 @@
 #include <math.h>
 #include <time.h>
 
-#include "inc/AVL.h"
-#include "inc/BST.h"
+#include "../inc/AVL.h"
+#include "../inc/BST.h"
 
 void header(){
     printf("|===============================|\n");
