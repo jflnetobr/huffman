@@ -175,6 +175,8 @@ void compress(char fileInPath[], char fileOutPath[])
         huff_node *new_root = create_huffman_node(ast, root->freq);
         
         place_tree_node(new_root, root, NULL);   
+
+        root = new_root;
     }
 
     code table[256], startcode;
