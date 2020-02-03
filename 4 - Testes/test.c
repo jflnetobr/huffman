@@ -93,9 +93,7 @@ void test_print_pre_order(){
 
     while((fscanf(fileIn, "%c", &c_in) != EOF) && (fscanf(fileOut, "%c", &c_out) != EOF))
     {
-        if(!(CU_ASSERT_EQUAL(c_out, c_in))){
-            printf("expected: %c\nactual: %c\n", c_in, c_out);
-        }
+        CU_ASSERT_EQUAL(c_out, c_in);
     } 
 
     fclose(fileIn);
