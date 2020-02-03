@@ -10,8 +10,6 @@
 #include "../2 - Huffman/inc/compress.h"
 #include "../2 - Huffman/inc/decompress.h"
 
-
-
 int init_suite(void) {
     return 0;
 }
@@ -76,44 +74,32 @@ void test_is_leaf(){
 }
 
 void test_print_pre_order(){
-    unsigned char str[10],c;
-    strcpy(str,"***EDC*BA");
-    int i=0;
-    FILE *fileOut,*fileIn;
-    fileOut = fopen("Tree_Out", "w");
-    void *item = set_void_pointer('*');
-    huff_node *root = create_huffman_node(item,15);
-    huff_node *left = create_huffman_node(item,6);
-    huff_node *right = create_huffman_node(item,9);
-    place_tree_node(root,left,right);
-    /* Creating and placing the right subtree nodes */
-    item = set_void_pointer('B');
-    huff_node *B = create_huffman_node(item,4);
-    item = set_void_pointer('A');
-    huff_node *A = create_huffman_node(item,5);
-    place_tree_node(right,B,A);
-    /* Creating and placing the left subtree nodes */
-    item = set_void_pointer('C');
-    huff_node *C = create_huffman_node(item,3);
-    item = set_void_pointer('D');
-    huff_node *D = create_huffman_node(item,2);
-    item = set_void_pointer('E');
-    huff_node *E = create_huffman_node(item,1);
-    item = set_void_pointer('*');
-    huff_node *node = create_huffman_node(item,3);
-    place_tree_node(node,E,D);
-    place_tree_node(left,node,C);
-    /* Printing on the file */
-    print_pre_order(root,fileOut);
-    /* Testing if it was printing correctly on the file */
+    unsigned char c_out, c_in;
+
+    short filesize = (short) get_filesize("tree.txt");
+
+    FILE *fileIn = fopen("tree.txt", "r");
+    FILE *fileOut = fopen("treeout.txt", "w");
+
+    huff_node *root = mount_tree(fileIn, &filesize);
+
+    rewind(fileIn);
+
+    print_pre_order(root, fileOut);
+
     fclose(fileOut);
-    fileIn = fopen("Tree_Out", "r");
-    while (fscanf(fileIn,"%c",&c)!=EOF)
+
+    fileOut = fopen("treeout.txt", "r");
+
+    while((fscanf(fileIn, "%c", &c_in) != EOF) && (fscanf(fileOut, "%c", &c_out) != EOF))
     {
-        CU_ASSERT_EQUAL(c,str[i]);
-        i++;
+        if(!(CU_ASSERT_EQUAL(c_out, c_in))){
+            printf("expected: %c\nactual: %c\n", c_in, c_out);
+        }
     } 
+
     fclose(fileIn);
+    fclose(fileOut);
 }
 
  void test_create_priority_queue(){
