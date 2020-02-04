@@ -20,7 +20,6 @@
     * PS: `Lembre-se de escolher um tipo de comparação (encaminhando-se até a pasta), por número ou por tamanho.`
     * **`$ cd .../.../huffman/3 - Comparação Estruturas/`**
     
-* Para rodar os testes, e em seguida plotar o resultado, digite os seguintes comandos:
-   * **`$ chmod +x compare_plot.sh`**
-   * **`$ ./compare_plot.sh`**
+* Para rodar os testes, e em seguida plotar o resultado, digite o seguinte comando:
+   * **`$ bash ./compare_plot.sh`**
  
