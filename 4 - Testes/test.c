@@ -74,23 +74,20 @@ void test_is_leaf(){
 }
 
 void test_print_pre_order(){
+    /* Creating to chars to use in comparison of 'in vs out' */
     unsigned char c_out, c_in;
 
     short filesize = (short) get_filesize("tree.txt");
 
     FILE *fileIn = fopen("tree.txt", "r");
-    FILE *fileOut = fopen("treeout.txt", "w");
-
+    FILE *fileOut = fopen("treeout.txt", "w+");
+    /* Creating the tree wich was written on the 'tree.txt' */
     huff_node *root = mount_tree(fileIn, &filesize);
 
     rewind(fileIn);
-
+    /* Printing the tree on a file */
     print_pre_order(root, fileOut);
-
-    fclose(fileOut);
-
-    fileOut = fopen("treeout.txt", "r");
-
+    /* Checking if the two files match */
     while((fscanf(fileIn, "%c", &c_in) != EOF) && (fscanf(fileOut, "%c", &c_out) != EOF))
     {
         CU_ASSERT_EQUAL(c_out, c_in);
@@ -104,7 +101,7 @@ void test_print_pre_order(){
     /* Creating a empty queue */
     priority_queue *queue = create_priority_queue();
     /* Testing if the head of the queue points to NULL */
-    CU_ASSERT_EQUAL(queue -> head,NULL);
+    CU_ASSERT_PTR_NULL(queue->head);
     free(queue);
  }
  
@@ -158,7 +155,7 @@ void test_enqueue_dequeue() {
     /* Testing if 'next' node is NULL */
     CU_ASSERT_EQUAL(has_next(queue),0);
     /* Testing if is was completely dequeued */
-    CU_ASSERT_EQUAL(queue->head,NULL);
+    CU_ASSERT_PTR_NULL(queue->head);
     free(queue);
 }
 
