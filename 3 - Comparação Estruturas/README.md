@@ -1,10 +1,10 @@
 # Comparação das Estruturas
 * :punch:  BST vs AVL  :punch:
 
-## Sites úteis:
+## Links úteis:
 * [Matplotlib](https://matplotlib.org/)
 * [NumPy](https://numpy.org/)
-
+* [Instalação Alternativa das bibliotecas Matplotlib e Numpy](https://youtu.be/ClOlSlDpCm4)
 ## Configurações para testes
 
 * Clone o [repositório](https://github.com/jflnetobr/huffman) para uma pasta local do seu computador.
