@@ -84,9 +84,11 @@ void test_print_pre_order(){
     /* Creating the tree wich was written on the 'tree.txt' */
     huff_node *root = mount_tree(fileIn, &filesize);
 
-    rewind(fileIn);
     /* Printing the tree on a file */
     print_pre_order(root, fileOut);
+
+    rewind(fileIn);
+    rewind(fileOut);
     /* Checking if the two files match */
     while((fscanf(fileIn, "%c", &c_in) != EOF) && (fscanf(fileOut, "%c", &c_out) != EOF))
     {
