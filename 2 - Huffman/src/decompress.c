@@ -45,15 +45,17 @@ huff_node *mount_tree(FILE *fileIn, short int *treesize)
 
 void fill_file(FILE *fileIn, FILE *fileOut, huff_node *tree, short int trashsize, long long int file_size)
 {    
-    int i, j;
+    int i, j, lim = 0;
     unsigned char caractere;  
     huff_node *current = tree;  
     
-    for(j = 0; j < file_size - 1; j++)
+    for(j = 0; j < file_size; j++)
     {
         caractere = getc(fileIn);
 
-        for(i = 7; i >= 0; i--)
+        if(j == (file_size - 1)) lim = trashsize;
+
+        for(i = 7; i >= lim; i--)
         {
             if(is_bit_i_set(caractere, i))
             {
@@ -71,26 +73,6 @@ void fill_file(FILE *fileIn, FILE *fileOut, huff_node *tree, short int trashsize
             }            
         }                
     }
-    
-    caractere = getc(fileIn);
-    
-    for(i = 7; i >= trashsize; i--)
-    {        
-        if(is_bit_i_set(caractere, i))
-        {
-            current = current->right;
-        }
-        else
-        {
-            current = current->left;
-        }
-        
-        if(is_leaf(current))
-        {
-            fprintf(fileOut, "%c", get_item(current));
-            current = tree;            
-        }
-    }            
 }
 
 void decompress(char fileInPath[], char fileOutPath[])
